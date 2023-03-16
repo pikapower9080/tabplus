@@ -6,52 +6,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Tab</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icons/icon-32.png">
   </head>
   <body>
     <div id="Content">
-        <h1 id="time">0:00</h1>
+        <h1 id="time"></h1>
         <h2 id="message"></h2>
-        <form id="searchform">
-            <input id="search-input" type="search" name="search" placeholder="Search Google...">
-        </form>
-        <dialog id="emojipopup">
-          <h2 class="emoji-header">Pick an emoji</h2>
-            <div id="emojigrid">
-                <div class="emojicell" id="emojitemplate" style="display: none;"><label class="emojicelllabel">🚀</label></div>
-            </div>
-        </dialog>
-        <div id="topsites">
-            <div class="topsite-card" id="card-1">
-                <label class="topsite-card-emoji">🌐</label>
-                <h3 class="topsite-card-label">Right Click to customize</h3>
-            </div>
-            <div class="topsite-card" id="card-2">
-              <label class="topsite-card-emoji">📝</label>
-              <h3 class="topsite-card-label">Right Click to customize</h3>
-            </div>
-            <div class="topsite-card" id="card-3">
-              <label class="topsite-card-emoji">🎮</label>
-              <h3 class="topsite-card-label">Right Click to customize</h3>
-            </div>
+        <div id="shortcut-grid">
+          <div id="shortcut-row-1" class="shortcut-row">
+            <a><div id="shortcut-1" class="shortcut"><span class="shortcut-emoji">❓</span><span class="shortcut-name">Right click to customize</span></div></a>
+            <a><div id="shortcut-2" class="shortcut"><span class="shortcut-emoji">❓</span><span class="shortcut-name">Right click to customize</span></div></a>
+            <a><div id="shortcut-3" class="shortcut"><span class="shortcut-emoji">❓</span><span class="shortcut-name">Right click to customize</span></div></a>
+          </div>
         </div>
-        <dialog id="settings">
-          <label id="settings-x" style="cursor: pointer; user-select: none;">x</label>
-          <h2 style="text-align: center;">Settings</h2>
-          <label>Background Gallery: </label><select id="bg-family">
-            <option>Nature</option>
-            <option>Cats</option>
-            <option>Dogs</option>
-            <option>Flowers</option>
-            <option>Random Unsplash</option>
-            <option>Colors</option>
-            <option>None</option>
-          </select><br>
-          <div id="bg-color-div"><label>Background Color: </label><input type="color" id="bg-color"><br></div>
-          <!-- <input type="checkbox" id="enableshortcuts"><label for="enableshortcuts">Enable Shortcuts</label> -->
-        </dialog>
         <h2 id="goal">Today I want to <span role="textbox" contenteditable id="goal-input" spellcheck="false">...</span></h2>
-        <img src="icons/settings.svg" id="settingsicon" width="25" height="25">
+        <img src="icons/settings.svg" id="settingsicon" width="25" height="25" draggable="false">
+        <div id="settings" class="hidden">
+          <h1>Settings</h1>
+          <hr>
+          <fieldset>
+            <legend>Background</legend>
+            <input type="radio" name="bg-option" value="default" id="bg-option-default"><label for="bg-option-default">Default Gallery</label><br>
+            <input type="radio" name="bg-option" value="custom" id="bg-option-custom"><label for="bg-option-custom">Custom Image(s)</label><br>
+            <fieldset class="subset" data-requires="bg-option-custom">
+              <p>Paste a list of direct image urls seperated by new lines. If there is more than one line, a random image will be selected from the list.</p>
+              <textarea id="custom-images" spellcheck="false" autocapitalize="false" autocomplete="off"></textarea>
+            </fieldset>
+            <input type="radio" name="bg-option" value="materialColors" id="bg-option-materialColors"><label for="bg-option-materialColors">Solid Colors</label><br>
+            <input type="radio" name="bg-option" value="color" id="bg-option-color"><label for="bg-option-color">Custom Color</label><br>
+            <fieldset class="subset" data-requires="bg-option-color">
+              <input type="color" id="custom-color-input">
+            </fieldset>
+          </fieldset>
+          <fieldset>
+            <legend>Message</legend>
+            <input type="radio" name="mg-option" value="none" id="mg-option-none"><label for="mg-option-none">None</label><br>
+            <input type="radio" name="mg-option" value="motivational" id="mg-option-motivational"><label for="mg-option-motivational">Motivational Messages</label><br>
+            <input type="radio" name="mg-option" value="jokes" id="mg-option-jokes"><label for="mg-option-jokes">Jokes & Puns</label><br>
+            <input type="radio" name="mg-option" value="customMg" id="mg-option-custom"><label for="mg-option-custom">Custom</label>
+            <fieldset class="subset" data-requires="mg-option-custom">
+              <p>Enter your custom messages seperated by new lines. If there is more than one line, a random message will be selected from the list.</p>
+              <textarea id="custom-messages" spellcheck="false" autocapitalize="false" autocomplete="off"></textarea>
+            </fieldset>
+          </fieldset>
+          <fieldset>
+            <legend>Adjustments</legend>
+            <label>Time Position: </label>
+            <input type="range" min="-70" max="50" value="-40" id="time-position"><br>
+            <label>Message Position: </label>
+            <input type="range" min="30" max="190" value="100" id="message-position"><br>
+            <label>Goal Position: </label>
+            <input type="range" min="-30" max="60" value="30" id="goal-position"><br>
+            <label>Shortcut Size: </label>
+            <input type="range" min="130" max="200" value="170" id="shortcut-size"><br>
+            <label>Shortcut Position: </label>
+            <input type="range" min="200" max="800" value="350" id="shortcut-pos">
+          </fieldset>
+          <fieldset>
+            <legend>Toggles</legend>
+          <input type="checkbox" id="shortcuts-toggle" checked><label for="shortcuts-toggle">Enable Shortcuts</label><br>
+          <input type="checkbox" id="goal-toggle" checked><label for="goal-toggle">Enable Daily Goal</label><br>
+          <input type="checkbox" id="shadow-toggle" checked><label for="shadow-toggle">Enable Text Shadow</label><br>
+          <input type="checkbox" id="darken-toggle"><label for="darken-toggle">Darken Shortcut Background</label>
+          </fieldset>
+          <p>Right click a shortcut to customize it.</p>
+          <button onclick="if(confirm('Are you sure?')){localStorage.clear(); window.location.reload()}">Reset Data</button><br><br>
+        </div>
+        <div id="settings-overlay" class="hidden"></div>
+        <dialog id="shortcut-modal">
+          <header>
+            <h2>Edit Shortcut</h2>
+            <hr>
+            <form>
+              <div>
+                <label for="shortcut-name">Name:</label>
+                <input type="text" id="shortcut-name" name="shortcut-name" placeholder="Enter shortcut name" required maxlength="40" autocomplete="off">
+              </div>
+              <div>
+                <label for="shortcut-url">Full URL:</label>
+                <input type="url" id="shortcut-url" name="shortcut-url" placeholder="https://example.com/ " required autocomplete="off" spellcheck="false">
+              </div>
+              <div>
+                <label for="shortcut-emoji">Emoji / Acronym:</label>
+                <input type="text" id="shortcut-emoji" name="shortcut-emoji" placeholder="Enter up to four characters" required maxlength="4" autocomplete="off">
+              </div>
+              <footer>
+                <button class="save-button" type="submit">Save</button>
+                <button class="cancel-button" type="reset" onclick="g('shortcut-modal').close()">Cancel</button>
+              </footer>
+            </form>
+          </header>
+        </dialog>
+        <dialog id="welcome">
+          <h2>Welcome to Tab+</h2>
+          <hr>
+          <p>Don't worry if things don't look right.<br><br>Head over to <strong>settings in the bottom left</strong> where you can customize the positioning of each element!<br>You can also customize the background, message, and toggle features.</p>
+          <button style="width: 49%;" disabled class="close-button">Close</button>
+          <button style="width: 49%;" disabled class="settings-button">Settings</button>
+        </dialog>
     </div>
     <script src="js/main.js"></script>
+    <script src="js/backgrounds.js"></script>
+    <script src="js/messages.js"></script>
+    <script src="js/shortcuts.js"></script>
   </body>
 </html>

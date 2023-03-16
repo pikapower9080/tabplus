@@ -1,7 +1,7 @@
 {
   "name": "Tab+",
-  "description": "A simple extension to replace the new tab page with something else.",
-  "version": "1.0",
+  "description": "A super simple customizable new tab page.",
+  "version": "2.0",
   "manifest_version": 3,
   "chrome_url_overrides" : {
     "newtab": "newtab.html"

@@ -1,8 +1,29 @@
-var emojis = ['🤡', '🤟', '👀', '👑', '🐶', '🍎', '🏈', '🏀', '🎧', '🎤', '🎹', '🎻', '🎮', '💎', '🛒', '📍', '🕓', '📖', '📝', '🌐']
-var gridElements = []
-
 function g(element){
     return document.getElementById(element)
+}
+
+const el = {
+    time: g("time"),
+    goalInput: g("goal-input"),
+    settingsOverlay: g("settings-overlay"),
+    settings: g("settings"),
+    settingsBtn: g("settingsicon"),
+    customImages: g("custom-images"),
+    colorInput: g("custom-color-input"),
+    customMessages: g("custom-messages"),
+    message: g("message"),
+    timePosition: g("time-position"),
+    messagePosition: g("message-position"),
+    goalPosition: g("goal-position"),
+    goal: g("goal"),
+    shortcutSize: g("shortcut-size"),
+    shortcutPos: g("shortcut-pos"),
+    shortcutModal: g("shortcut-modal"),
+    textShadowCheck: g("shadow-toggle"),
+    goalCheck: g("goal-toggle"),
+    shortcutsToggle: g("shortcuts-toggle"),
+    shadowToggle: g("shadow-toggle"),
+    darkenToggle: g("darken-toggle")
 }
 
 function formatAMPM(date) {
@@ -16,219 +37,215 @@ function formatAMPM(date) {
     strTime += ' ' + ampm;             
     return strTime;
 }
-var photos = {
-    nature: [
-        "fox.jpeg",
-        "mountains-2.jpeg",
-        "mountains-3.jpg",
-        "mountains-4.jpeg",
-        "mountains.jpeg",
-        "palmtree.jpeg",
-        "yosemite.jpeg",
-        "flowers.jpeg",
-        "field.jpeg",
-        "lake.jpeg",
-        "lake-2.jpeg",
-        "landscape.jpeg",
-        "landscape-2.jpeg",
-        "tree.jpeg",
-        "owl.jpeg",
-        "tree-2.jpeg",
-        "forest.jpeg",
-        "sunset.jpeg"
-    ],
-    cats: [], // These are added with code
-    none: [""],
-    dogs: [], // These are added with code too
-    flowers: [], // I think you get the idea
-    colors: [
-        "#E53935",
-        "#C62828",
-        "#EC407A",
-        "#9C27B0",
-        "#BA68C8",
-        "#6A1B9A",
-        "#673AB7",
-        "#3F51B5",
-        "#1E88E5",
-        "#4FC3F7",
-        "#00BCD4",
-        "#26A69A",
-        "#4CAF50",
-        "#3CCC65",
-        "#CDDC39",
-        "#FFC107",
-    ],
-    random: ["//RANDOM//"]
-}
-var backgroundsets = {
-    "Nature": photos.nature,
-    "Cats": photos.cats,
-    "Dogs": photos.dogs,
-    "Flowers": photos.flowers,
-    "Colors": photos.colors,
-    "None": photos.none,
-    "Random Unsplash": photos.random
-}
-var backgroundset = photos.nature
-if (localStorage.getItem("bgset")) {
-    backgroundset = backgroundsets[localStorage.getItem("bgset")]
-    g("bg-family").value = localStorage.getItem("bgset")
-}
-var catmax = 14
-var dogmax = 23
-var flowermax = 18
-for (let i = 0; i < dogmax; i++) {
-    photos.dogs.push("dogs/dog-" + i + ".jpeg")
-}
-for (let i = 0; i < catmax; i++) {
-    photos.cats.push("cats/cat-" + i + ".jpeg")
-}
-for (let i = 0; i < flowermax; i++) {
-    photos.flowers.push("flowers/flowers-" + i + ".jpeg")
-}
-var messages = [
-    "Have a great day!",
-    "Turn that frown upside down!",
-    "Get stuff done today!",
-    "No more procrastinating!!!!",
-    "You can do it!",
-    "Don't give up!",
-    "You got this!"
-]
-document.getElementById('goal-input').addEventListener('keypress', (evt) => {
-    if (evt.key === "Enter") {
-        evt.preventDefault();
-    }
-});
-if (localStorage.getItem('goal')) {
-    document.getElementById("goal-input").innerText = localStorage.getItem("goal")
-}
-document.getElementById("message").innerText = messages[Math.floor(Math.random() * messages.length)]
-function loadBackground() {
-    if (backgroundset[Math.floor(Math.random() * backgroundset.length)] == "//RANDOM//"){
-        document.body.style.setProperty("--background", 'url("https://source.unsplash.com/random/")')
-        return
-    }
-    if (backgroundset != photos.colors) {
-        document.body.style.setProperty("--background", 'url("backgrounds/' + backgroundset[Math.floor(Math.random() * backgroundset.length)] + '")')
-    } else {
-        document.body.style.setProperty("--background-color", photos.colors[Math.floor(Math.random() * photos.colors.length)])
-    }
-}
-if (localStorage.getItem("bg-color")) {
-    document.body.style.setProperty("--background-color", localStorage.getItem("bg-color"))
-    g("bg-color").value = localStorage.getItem("bg-color")
-}
-loadBackground()
-setInterval(() => {
-    document.getElementById("time").innerText = formatAMPM(new Date())
-}, 500);
-setInterval(() => {
-    localStorage.setItem("goal", document.getElementById('goal-input').innerText)
-}, 1000);
-document.getElementById("time").innerText = formatAMPM(new Date())
 
-document.getElementById("searchform").addEventListener("submit", function(event){
-    event.preventDefault()
-    window.location.href = "https://google.com/search?q=" + document.getElementById("search-input").value
+el.goalInput.innerHTML = localStorage.getItem("goal")
+function tick() {
+    el.time.innerText = formatAMPM(new Date())
+    if (document.hasFocus()) {
+        localStorage.setItem("goal", el.goalInput.innerHTML)
+    }
+    if (document.activeElement !== el.goalInput) {
+        el.goalInput.innerHTML = localStorage.getItem("goal")
+    }
+}
+
+setInterval(tick, 1000)
+tick()
+
+el.goalInput.addEventListener("keydown", (e) => {
+    if (e.key == "Enter") {
+        e.preventDefault()
+        el.goalInput.blur()
+    }
+    if (e.key == "Escape") {
+        el.goalInput.blur()
+    }
 })
-g("emojipopup").addEventListener('cancel', (event) => {
-    event.preventDefault(); // Prevent you from closing using the escape key in some browsers
-});
 
-function promptWithDefault(message, defaultvalue){
-    var response = prompt(message, defaultvalue)
-    if (response == null || response.trim() == ""){
-        return defaultvalue
+function toggleSettings() {
+    if (el.settings.classList.contains("animateOut")) return;
+    if (!el.settings.classList.contains("hidden")) {
+        el.settings.classList.remove("animate")
+        el.settings.classList.add("animateOut")
+        el.settingsOverlay.classList.add("hidden")
+        setTimeout(() => {
+            el.settings.classList.remove("animateOut")
+            el.settings.classList.add("hidden")
+        }, 300)
     } else {
-        return response
+        el.settings.classList.add("animate")
+        el.settings.classList.remove("hidden")
+        el.settingsOverlay.classList.remove("hidden")
     }
 }
 
-function setupCard(card, storageKey){
-    g(card).addEventListener("contextmenu", function(event){
-        event.preventDefault()
-        var newurl = promptWithDefault("Enter new url. Make sure to include the whole thing including https:// or http://", "https://google.com")
-        g(card).getElementsByClassName("topsite-card-label")[0].innerText = newurl
-        localStorage.setItem(storageKey, newurl)
-        var sitename = promptWithDefault("Enter a label for this site. It can be anything.", "Google")
-        g(card).getElementsByClassName("topsite-card-label")[0].innerText = sitename
-        localStorage.setItem(storageKey + "-label", sitename)
-        var pickEmoji = new Promise(function(resolve, reject) {
-            var pickedElement;
-            try{
-                const emojielements = g("emojigrid").getElementsByClassName("emojicell")
-                g("emojipopup").showModal()
-                for (let i = 0; i < emojielements.length; i++) {
-                    var element = emojielements[i]
-                    element.addEventListener("click", function(event){
-                        pickedElement = i
-                        g("emojipopup").close()
-                        resolve(gridElements[pickedElement - 1].getElementsByClassName("emojicelllabel")[0].innerText)
-                    }) 
+function getOption(optionId) {
+    return document.querySelector(`input[name="${optionId}"]:checked`)
+}
+function processSubSets() {
+    document.querySelectorAll('fieldset.subset[data-requires]').forEach((subset) => {
+        if (subset.dataset.requires) {
+            if (document.getElementById(subset.dataset.requires) && document.getElementById(subset.dataset.requires).type == "radio") {
+                if (document.getElementById(subset.dataset.requires).checked) {
+                    subset.classList.remove("hidden")
+                } else {
+                    subset.classList.add("hidden")
                 }
-            } catch(err) {
-                console.error(err)
-                reject(err)
             }
-        })
-        pickEmoji.then(function(result){
-            console.log(result)
-            g(card).getElementsByClassName("topsite-card-emoji")[0].innerText = result
-            localStorage.setItem(storageKey + "-emoji", result)
-        }, function(error){
-            console.warn(error)
-        })
+        }
     })
-    if(localStorage.getItem(storageKey + "-label")){
-        g(card).getElementsByClassName("topsite-card-label")[0].innerText = localStorage.getItem(storageKey + "-label")
-    }
-    if(localStorage.getItem(storageKey + "-emoji")){
-        g(card).getElementsByClassName("topsite-card-emoji")[0].innerText = localStorage.getItem(storageKey + "-emoji")
-    }
-    g(card).addEventListener("click", function(){
-        window.location.href = localStorage.getItem(storageKey)
-    })    
 }
-setupCard("card-1", "site-1")
-setupCard("card-2", "site-2")
-setupCard("card-3", "site-3")
+document.querySelectorAll("input[type='radio']").forEach((radio) => {
+    radio.addEventListener("change", (e) => {
+        processSubSets()
+        localStorage.setItem("bg-option", getOption("bg-option").value)
+        localStorage.setItem("mg-option", getOption("mg-option").value)
+        if (e.target.name && e.target.name == "bg-option") {
+            refreshBackground()
+        }
+        if (e.target.name && e.target.name == "mg-option") {
+            refreshMessage()
+        }
+    })
+})
 
-for (let i = 0; i < emojis.length; i++) {
-    var clone = g("emojitemplate").cloneNode(true)
-    clone.setAttribute("id", "emoji-" + i)
-    clone.setAttribute("style", "")
-    clone.getElementsByTagName("label")[0].innerText = emojis[i]
-    g("emojigrid").appendChild(clone)
-    gridElements.push(clone)
-}
-
-g("bg-family").addEventListener("input", () => {
-    backgroundset = backgroundsets[g("bg-family").value]
-    localStorage.setItem("bgset", g("bg-family").value)
-    loadBackground()
-    if (g("bg-family").value == "Colors") {
-        window.location.reload()
-    }
-    if (g("bg-family").value == "None") {
-        g("bg-color-div").style.display = "unset"
+el.customImages.addEventListener("change", () => {
+    localStorage.setItem("customImages", el.customImages.value)
+    refreshBackground()
+})
+el.customMessages.addEventListener("change", () => {
+    localStorage.setItem("customMessages", el.customMessages.value)
+    refreshMessage()
+})
+el.colorInput.addEventListener("input", () => {
+    refreshBackground()
+    localStorage.setItem("customColor", el.colorInput.value)
+})
+el.timePosition.addEventListener("input", () => {
+    el.time.style.top = el.timePosition.value + "px"
+    localStorage.setItem("time-pos", el.timePosition.value)
+})
+el.messagePosition.addEventListener("input", () => {
+    el.message.style.top = el.messagePosition.value + "px"
+    localStorage.setItem("message-pos", el.messagePosition.value)
+})
+el.goalPosition.addEventListener("input", () => {
+    el.goal.style.bottom = el.goalPosition.value + "px"
+    localStorage.setItem("goal-pos", el.goalPosition.value)
+})
+el.shortcutSize.addEventListener("input", () => {
+    document.documentElement.style.setProperty("--shortcut-size", el.shortcutSize.value + "px")
+    localStorage.setItem("shortcut-size", el.shortcutSize.value)
+})
+el.shortcutPos.addEventListener("input", () => {
+    document.documentElement.style.setProperty("--shortcut-pos", el.shortcutPos.value + "px")
+    localStorage.setItem("shortcut-pos", el.shortcutPos.value)
+})
+el.shortcutsToggle.addEventListener("change", () => {
+    localStorage.setItem("enable-shortcuts", el.shortcutsToggle.checked)
+    g("shortcut-grid").classList.toggle("hidden", !el.shortcutsToggle.checked)
+})
+el.goalCheck.addEventListener("change", () => {
+    localStorage.setItem("enable-goal", el.goalCheck.checked)
+    g("goal").classList.toggle("hidden", !el.goalCheck.checked)
+})
+function updateTextShadow() {
+    if (!el.shadowToggle.checked) {
+        document.documentElement.style.setProperty("--text-shadow", "none")
     } else {
-        g("bg-color-div").style.display = "none"
+        document.documentElement.style.setProperty("--text-shadow", "rgba(0, 0, 0, 0.5) 2px 3px 5px")
+    }
+}
+el.shadowToggle.addEventListener("change", () => {
+    localStorage.setItem("enable-shadow", el.shadowToggle.checked)
+    updateTextShadow()
+})
+function updateShortcutBackgrounds() {
+    document.querySelectorAll(".shortcut-row > a > div").forEach((shortcut) => {
+        shortcut.classList.toggle("darken", el.darkenToggle.checked)
+    })
+}
+el.darkenToggle.addEventListener("change", () => {
+    localStorage.setItem("darken-shortcuts", el.darkenToggle.checked)
+    updateShortcutBackgrounds()
+})
+
+el.customImages.value = localStorage.getItem("customImages")
+el.customMessages.value = localStorage.getItem("customMessages")
+el.colorInput.value = localStorage.getItem("customColor")
+if (localStorage.getItem("time-pos")) {
+    el.timePosition.value = localStorage.getItem("time-pos")
+    el.time.style.top = el.timePosition.value + "px"
+}
+if (localStorage.getItem("message-pos")) {
+    el.messagePosition.value = localStorage.getItem("message-pos")
+    el.message.style.top = el.messagePosition.value + "px"
+}
+if (localStorage.getItem("goal-pos")) {
+    el.goalPosition.value = localStorage.getItem("goal-pos")
+    el.goal.style.bottom = el.goalPosition.value + "px"
+}
+if (localStorage.getItem("shortcut-size")) {
+    el.shortcutSize.value = localStorage.getItem("shortcut-size")
+    document.documentElement.style.setProperty("--shortcut-size", el.shortcutSize.value + "px")
+}
+if (localStorage.getItem("shortcut-pos")) {
+    el.shortcutPos.value = localStorage.getItem("shortcut-pos")
+    document.documentElement.style.setProperty("--shortcut-pos", el.shortcutPos.value + "px")
+}
+if (localStorage.getItem("enable-shortcuts")) {
+    el.shortcutsToggle.checked = JSON.parse(localStorage.getItem("enable-shortcuts"))
+    g("shortcut-grid").classList.toggle("hidden", !el.shortcutsToggle.checked)
+}
+if (localStorage.getItem("enable-goal")) {
+    el.goalCheck.checked = JSON.parse(localStorage.getItem("enable-goal"))
+    g("goal").classList.toggle("hidden", !el.goalCheck.checked)
+}
+if (localStorage.getItem("enable-shadow")) {
+    el.shadowToggle.checked = JSON.parse(localStorage.getItem("enable-shadow"))
+    updateTextShadow()
+}
+if (localStorage.getItem("darken-shortcuts")) {
+    el.darkenToggle.checked = JSON.parse(localStorage.getItem("darken-shortcuts"))
+    updateShortcutBackgrounds()
+}
+
+if (localStorage.getItem("bg-option")) {
+    document.querySelector(`input[value=${localStorage.getItem("bg-option")}]`).checked = true
+} else {
+    g("bg-option-default").checked = true
+}
+if (localStorage.getItem("mg-option")) {
+    document.querySelector(`input[value=${localStorage.getItem("mg-option")}]`).checked = true
+} else {
+    g("mg-option-motivational").checked = true
+}
+
+document.addEventListener("keydown", (e) => {
+    if (e.key == "Escape" && !el.settings.classList.contains("hidden")) {
+        toggleSettings()
     }
 })
-if (g("bg-family").value == "None") {
-    g("bg-color-div").style.display = "unset"
-} else {
-    g("bg-color-div").style.display = "none"
+
+processSubSets()
+
+el.settingsOverlay.addEventListener("click", toggleSettings)
+el.settingsBtn.addEventListener("click", toggleSettings)
+
+if (!localStorage.getItem("first-time")) {
+    g("welcome").showModal()
+    setTimeout(() => {document.querySelector("#welcome > .close-button").disabled = false}, 1) // Prevents the close button from being autofocused
+    setTimeout(() => {document.querySelector("#welcome > .settings-button").disabled = false}, 1)
+    document.querySelector("#welcome > .close-button").addEventListener("click", () => {
+        localStorage.setItem("first-time", false)
+        g("welcome").close()
+    })
+    document.querySelector("#welcome > .settings-button").addEventListener("click", () => {
+        localStorage.setItem("first-time", false)
+        g("welcome").close()
+        toggleSettings()
+    })
+    g("welcome").addEventListener("cancel", () => {
+        localStorage.setItem("first-time", false)
+    })
 }
-g("settingsicon").addEventListener("click", () => {
-    g("settings").showModal()
-})
-g("bg-color").addEventListener("input", () => {
-    document.body.style.setProperty("--background-color", g("bg-color").value)
-    localStorage.setItem("bg-color", g("bg-color").value)
-})
-g('settings-x').addEventListener("click", () => {
-    g("settings").close()
-})
