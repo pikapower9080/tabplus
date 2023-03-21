@@ -38,7 +38,7 @@ function formatAMPM(date) {
     return strTime;
 }
 
-el.goalInput.innerHTML = localStorage.getItem("goal")
+el.goalInput.innerHTML = localStorage.getItem("goal") || "..."
 function tick() {
     el.time.innerText = formatAMPM(new Date())
     if (document.hasFocus()) {
@@ -225,6 +225,13 @@ document.addEventListener("keydown", (e) => {
     if (e.key == "Escape" && !el.settings.classList.contains("hidden")) {
         toggleSettings()
     }
+})
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+    if(confirm('Are you sure?')){localStorage.clear(); window.location.reload()}
+})
+document.getElementById("shortcut-cancel-btn").addEventListener("click", () => {
+    g('shortcut-modal').close()
 })
 
 processSubSets()

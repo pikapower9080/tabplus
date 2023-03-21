@@ -70,7 +70,7 @@
           <input type="checkbox" id="darken-toggle"><label for="darken-toggle">Darken Shortcut Background</label>
           </fieldset>
           <p>Right click a shortcut to customize it.</p>
-          <button onclick="if(confirm('Are you sure?')){localStorage.clear(); window.location.reload()}">Reset Data</button><br><br>
+          <button id="reset-btn">Reset Data</button><br><br>
         </div>
         <div id="settings-overlay" class="hidden"></div>
         <dialog id="shortcut-modal">
@@ -92,7 +92,7 @@
               </div>
               <footer>
                 <button class="save-button" type="submit">Save</button>
-                <button class="cancel-button" type="reset" onclick="g('shortcut-modal').close()">Cancel</button>
+                <button class="cancel-button" type="reset" id="shortcut-cancel-btn">Cancel</button>
               </footer>
             </form>
           </header>

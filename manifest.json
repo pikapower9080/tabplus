@@ -1,7 +1,7 @@
 {
   "name": "Tab+",
-  "description": "A super simple customizable new tab page.",
-  "version": "2.0",
+  "description": "A customizable new tab replacement.",
+  "version": "2.1",
   "manifest_version": 3,
   "chrome_url_overrides" : {
     "newtab": "newtab.html"
