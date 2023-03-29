@@ -32,6 +32,10 @@
               <p>Paste a list of direct image urls seperated by new lines. If there is more than one line, a random image will be selected from the list.</p>
               <textarea id="custom-images" spellcheck="false" autocapitalize="false" autocomplete="off"></textarea>
             </fieldset>
+            <input type="radio" name="bg-option" value="bing" id="bg-option-bing"><label for="bg-option-bing">Bing Image of the Day</label><br>
+            <fieldset class="subset" data-requires="bg-option-bing" style="border: none; margin-left: 0px;">
+              <a id="bing-copyright"></a>
+            </fieldset>
             <input type="radio" name="bg-option" value="materialColors" id="bg-option-materialColors"><label for="bg-option-materialColors">Solid Colors</label><br>
             <input type="radio" name="bg-option" value="color" id="bg-option-color"><label for="bg-option-color">Custom Color</label><br>
             <fieldset class="subset" data-requires="bg-option-color">
@@ -54,7 +58,7 @@
             <label>Time Position: </label>
             <input type="range" min="-70" max="50" value="-40" id="time-position"><br>
             <label>Message Position: </label>
-            <input type="range" min="30" max="190" value="100" id="message-position"><br>
+            <input type="range" min="30" max="190" value="120" id="message-position"><br>
             <label>Goal Position: </label>
             <input type="range" min="-30" max="60" value="30" id="goal-position"><br>
             <label>Shortcut Size: </label>

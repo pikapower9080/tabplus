@@ -45,7 +45,7 @@ function tick() {
         localStorage.setItem("goal", el.goalInput.innerHTML)
     }
     if (document.activeElement !== el.goalInput) {
-        el.goalInput.innerHTML = localStorage.getItem("goal")
+        el.goalInput.innerHTML = localStorage.getItem("goal") || "..."
     }
 }
 

@@ -86,6 +86,18 @@ function refreshBackground() {
         document.documentElement.style.setProperty("--background-color", el.colorInput.value)
         return
     }
+    if (getOption("bg-option")?.value == "bing") {
+        fetch("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1").then((res) => {
+            res.json().then((data) => {
+                document.documentElement.style.setProperty("--background", `url("https://bing.com${data.images[0].url}")`)
+                document.getElementById("bing-copyright").innerText = data.images[0].copyright
+                document.getElementById("bing-copyright").href = data.images[0].copyrightlink
+            })
+        }).catch((error) => {
+            console.error(error)
+        })
+    }
+    if (getOption("bg-option")?.value == "bing") return
     document.documentElement.style.setProperty("--background", `url("${defaultBackgroundPrefix + backgrounds[Math.floor(Math.random() * backgrounds.length)]}")`)
 }
 refreshBackground()
