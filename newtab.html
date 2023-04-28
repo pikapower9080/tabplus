@@ -73,6 +73,16 @@
           <input type="checkbox" id="shadow-toggle" checked><label for="shadow-toggle">Enable Text Shadow</label><br>
           <input type="checkbox" id="darken-toggle"><label for="darken-toggle">Darken Shortcut Background</label>
           </fieldset>
+          <fieldset>
+            <legend>Background Filters</legend>
+            <label>Darken:</label>
+            <input type="range" min="0" max="100" value="0" id="darken-bg"><br>
+            <label>Blur:</label>
+            <input type="range" min="0" max="40" value="0" id="blur-bg"><br>
+            <label>Grayscale</label>
+            <input type="range" min="0" max="100" value="0" id="grayscale-bg"><hr style="margin-bottom: 10px;">
+            <input type="checkbox" id="vignette-bg"><label for="vignette-bg">Vignette</label>
+          </fieldset>
           <p>Right click a shortcut to customize it.</p>
           <button id="reset-btn">Reset Data</button><br><br>
         </div>

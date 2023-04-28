@@ -1,13 +1,13 @@
 {
   "name": "Tab+",
   "description": "A customizable new tab replacement.",
-  "version": "2.2",
+  "version": "2.3",
   "manifest_version": 3,
   "chrome_url_overrides" : {
     "newtab": "newtab.html"
   },
   "host_permissions": [
-    "https://*/"
+    "https://www.bing.com/*"
   ],
   "icons": {
     "16": "/icons/icon-16.png",

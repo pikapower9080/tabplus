@@ -1,3 +1,5 @@
+let backdropFilter = ``
+
 function g(element){
     return document.getElementById(element)
 }
@@ -23,7 +25,11 @@ const el = {
     goalCheck: g("goal-toggle"),
     shortcutsToggle: g("shortcuts-toggle"),
     shadowToggle: g("shadow-toggle"),
-    darkenToggle: g("darken-toggle")
+    darkenToggle: g("darken-toggle"),
+    darkenBg: g("darken-bg"),
+    blurBg: g("blur-bg"),
+    grayscaleBg: g("grayscale-bg"),
+    vignetteToggle: g("vignette-bg")
 }
 
 function formatAMPM(date) {
@@ -109,6 +115,16 @@ document.querySelectorAll("input[type='radio']").forEach((radio) => {
     })
 })
 
+function updateBackdropFilter() {
+    backdropFilter = `blur(${el.blurBg.value}px) brightness(${100 - el.darkenBg.value}%) grayscale(${el.grayscaleBg.value}%)`
+    document.body.style.backdropFilter = backdropFilter
+    if (el.vignetteToggle.checked) {
+        document.body.style.boxShadow = "0 0 200px rgba(0,0,0,0.9) inset"
+    } else {
+        document.body.style.boxShadow = ""
+    }
+}
+
 el.customImages.addEventListener("change", () => {
     localStorage.setItem("customImages", el.customImages.value)
     refreshBackground()
@@ -169,6 +185,38 @@ el.darkenToggle.addEventListener("change", () => {
     localStorage.setItem("darken-shortcuts", el.darkenToggle.checked)
     updateShortcutBackgrounds()
 })
+el.darkenBg.addEventListener("input", () => {
+    localStorage.setItem("darken-bg", el.darkenBg.value)
+    updateBackdropFilter()
+})
+el.darkenBg.addEventListener("mousedown", (e) => {
+    el.settingsOverlay.style.display = "none"
+    el.settings.style.opacity = "50%"
+})
+el.darkenBg.addEventListener("mouseup", () => {
+    el.settingsOverlay.style.display = ""
+    el.settings.style.opacity = "100%"
+})
+el.blurBg.addEventListener("input", () => {
+    localStorage.setItem("blur-bg", el.blurBg.value)
+    updateBackdropFilter()
+})
+el.grayscaleBg.addEventListener("input", () => {
+    localStorage.setItem("grayscale-bg", el.grayscaleBg.value)
+    updateBackdropFilter()
+})
+el.grayscaleBg.addEventListener("mousedown", (e) => {
+    el.settingsOverlay.style.display = "none"
+    el.settings.style.opacity = "50%"
+})
+el.grayscaleBg.addEventListener("mouseup", () => {
+    el.settingsOverlay.style.display = ""
+    el.settings.style.opacity = "100%"
+})
+el.vignetteToggle.addEventListener("input", () => {
+    localStorage.setItem("vignette-bg", el.vignetteToggle.checked)
+    updateBackdropFilter()
+})
 
 el.customImages.value = localStorage.getItem("customImages")
 el.customMessages.value = localStorage.getItem("customMessages")
@@ -208,6 +256,22 @@ if (localStorage.getItem("enable-shadow")) {
 if (localStorage.getItem("darken-shortcuts")) {
     el.darkenToggle.checked = JSON.parse(localStorage.getItem("darken-shortcuts"))
     updateShortcutBackgrounds()
+}
+if (localStorage.getItem("darken-bg")) {
+    el.darkenBg.value = localStorage.getItem("darken-bg")
+    updateBackdropFilter()
+}
+if (localStorage.getItem("blur-bg")) {
+    el.blurBg.value = localStorage.getItem("blur-bg")
+    updateBackdropFilter()
+}
+if (localStorage.getItem("grayscale-bg")) {
+    el.grayscaleBg.value = localStorage.getItem("grayscale-bg")
+    updateBackdropFilter()
+}
+if (localStorage.getItem("vignette-bg")) {
+    el.vignetteToggle.checked = JSON.parse(localStorage.getItem("vignette-bg"))
+    updateBackdropFilter()
 }
 
 if (localStorage.getItem("bg-option")) {
