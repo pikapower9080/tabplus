@@ -4,6 +4,23 @@ function g(element){
     return document.getElementById(element)
 }
 
+let save = JSON.parse(localStorage.getItem("tabplus")) || {}
+function set(key, value) {
+    save[key] = value
+    localStorage.setItem("tabplus", JSON.stringify(save))
+}
+function get(key) {
+    if (typeof save[key] === "boolean") {
+        return "" + save[key]
+    }
+    return save[key] || undefined
+}
+function saved(key) {
+    if (typeof save[key] === "undefined") {
+        return false
+    } else {return true}
+}
+
 const el = {
     time: g("time"),
     goalInput: g("goal-input"),
@@ -29,7 +46,9 @@ const el = {
     darkenBg: g("darken-bg"),
     blurBg: g("blur-bg"),
     grayscaleBg: g("grayscale-bg"),
-    vignetteToggle: g("vignette-bg")
+    vignetteToggle: g("vignette-bg"),
+    fontFamily: g("font-family"),
+    secondaryFont: g("secondary-font")
 }
 
 function formatAMPM(date) {
@@ -44,14 +63,14 @@ function formatAMPM(date) {
     return strTime;
 }
 
-el.goalInput.innerHTML = localStorage.getItem("goal") || "..."
+el.goalInput.innerHTML = get("goal") || "..."
 function tick() {
     el.time.innerText = formatAMPM(new Date())
     if (document.hasFocus()) {
-        localStorage.setItem("goal", el.goalInput.innerHTML)
+        set("goal", el.goalInput.innerHTML)
     }
     if (document.activeElement !== el.goalInput) {
-        el.goalInput.innerHTML = localStorage.getItem("goal") || "..."
+        el.goalInput.innerHTML = get("goal") || "..."
     }
 }
 
@@ -104,8 +123,8 @@ function processSubSets() {
 document.querySelectorAll("input[type='radio']").forEach((radio) => {
     radio.addEventListener("change", (e) => {
         processSubSets()
-        localStorage.setItem("bg-option", getOption("bg-option").value)
-        localStorage.setItem("mg-option", getOption("mg-option").value)
+        set("bg-option", getOption("bg-option").value)
+        set("mg-option", getOption("mg-option").value)
         if (e.target.name && e.target.name == "bg-option") {
             refreshBackground()
         }
@@ -125,44 +144,62 @@ function updateBackdropFilter() {
     }
 }
 
+function updateFontFamily() {
+    let familyText = ""
+    if (el.fontFamily.value) {
+        familyText = "?family=" + el.fontFamily.value
+        if (el.secondaryFont.value) {
+            familyText += "&family=" + el.secondaryFont.value
+        }
+    } else if (el.secondaryFont.value && !el.fontFamily.value) {
+        familyText = "?famly=" + el.secondaryFont.value
+    }
+    if (familyText) {
+        const newGoogleFontsUrl = `https://fonts.googleapis.com/css2${familyText}&display=swap`
+        g("google-fonts").href = newGoogleFontsUrl
+        document.documentElement.style.setProperty("--font", `'${el.fontFamily.value}', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`)
+        document.documentElement.style.setProperty("--secondary-font", `'${el.secondaryFont.value}', sans-serif`)
+    }
+}
+
 el.customImages.addEventListener("change", () => {
-    localStorage.setItem("customImages", el.customImages.value)
+    set("customImages", el.customImages.value)
     refreshBackground()
 })
 el.customMessages.addEventListener("change", () => {
-    localStorage.setItem("customMessages", el.customMessages.value)
+    set("customMessages", el.customMessages.value)
     refreshMessage()
 })
 el.colorInput.addEventListener("input", () => {
     refreshBackground()
-    localStorage.setItem("customColor", el.colorInput.value)
+    set("customColor", el.colorInput.value)
 })
 el.timePosition.addEventListener("input", () => {
     el.time.style.top = el.timePosition.value + "px"
-    localStorage.setItem("time-pos", el.timePosition.value)
+    set("time-pos", el.timePosition.value)
 })
 el.messagePosition.addEventListener("input", () => {
     el.message.style.top = el.messagePosition.value + "px"
-    localStorage.setItem("message-pos", el.messagePosition.value)
+    set("message-pos", el.messagePosition.value)
 })
 el.goalPosition.addEventListener("input", () => {
     el.goal.style.bottom = el.goalPosition.value + "px"
-    localStorage.setItem("goal-pos", el.goalPosition.value)
+    set("goal-pos", el.goalPosition.value)
 })
 el.shortcutSize.addEventListener("input", () => {
     document.documentElement.style.setProperty("--shortcut-size", el.shortcutSize.value + "px")
-    localStorage.setItem("shortcut-size", el.shortcutSize.value)
+    set("shortcut-size", el.shortcutSize.value)
 })
 el.shortcutPos.addEventListener("input", () => {
     document.documentElement.style.setProperty("--shortcut-pos", el.shortcutPos.value + "px")
-    localStorage.setItem("shortcut-pos", el.shortcutPos.value)
+    set("shortcut-pos", el.shortcutPos.value)
 })
 el.shortcutsToggle.addEventListener("change", () => {
-    localStorage.setItem("enable-shortcuts", el.shortcutsToggle.checked)
+    set("enable-shortcuts", el.shortcutsToggle.checked)
     g("shortcut-grid").classList.toggle("hidden", !el.shortcutsToggle.checked)
 })
 el.goalCheck.addEventListener("change", () => {
-    localStorage.setItem("enable-goal", el.goalCheck.checked)
+    set("enable-goal", el.goalCheck.checked)
     g("goal").classList.toggle("hidden", !el.goalCheck.checked)
 })
 function updateTextShadow() {
@@ -173,7 +210,7 @@ function updateTextShadow() {
     }
 }
 el.shadowToggle.addEventListener("change", () => {
-    localStorage.setItem("enable-shadow", el.shadowToggle.checked)
+    set("enable-shadow", el.shadowToggle.checked)
     updateTextShadow()
 })
 function updateShortcutBackgrounds() {
@@ -182,11 +219,11 @@ function updateShortcutBackgrounds() {
     })
 }
 el.darkenToggle.addEventListener("change", () => {
-    localStorage.setItem("darken-shortcuts", el.darkenToggle.checked)
+    set("darken-shortcuts", el.darkenToggle.checked)
     updateShortcutBackgrounds()
 })
 el.darkenBg.addEventListener("input", () => {
-    localStorage.setItem("darken-bg", el.darkenBg.value)
+    set("darken-bg", el.darkenBg.value)
     updateBackdropFilter()
 })
 el.darkenBg.addEventListener("mousedown", (e) => {
@@ -198,11 +235,11 @@ el.darkenBg.addEventListener("mouseup", () => {
     el.settings.style.opacity = "100%"
 })
 el.blurBg.addEventListener("input", () => {
-    localStorage.setItem("blur-bg", el.blurBg.value)
+    set("blur-bg", el.blurBg.value)
     updateBackdropFilter()
 })
 el.grayscaleBg.addEventListener("input", () => {
-    localStorage.setItem("grayscale-bg", el.grayscaleBg.value)
+    set("grayscale-bg", el.grayscaleBg.value)
     updateBackdropFilter()
 })
 el.grayscaleBg.addEventListener("mousedown", (e) => {
@@ -214,75 +251,91 @@ el.grayscaleBg.addEventListener("mouseup", () => {
     el.settings.style.opacity = "100%"
 })
 el.vignetteToggle.addEventListener("input", () => {
-    localStorage.setItem("vignette-bg", el.vignetteToggle.checked)
+    set("vignette-bg", el.vignetteToggle.checked)
     updateBackdropFilter()
 })
+el.fontFamily.addEventListener("change", () => {
+    set("font-family", el.fontFamily.value)
+    updateFontFamily()
+})
+el.secondaryFont.addEventListener("change", () => {
+    set("secondary-font", el.secondaryFont.value)
+    updateFontFamily()
+})
 
-el.customImages.value = localStorage.getItem("customImages")
-el.customMessages.value = localStorage.getItem("customMessages")
-el.colorInput.value = localStorage.getItem("customColor")
-if (localStorage.getItem("time-pos")) {
-    el.timePosition.value = localStorage.getItem("time-pos")
+el.customImages.value = get("customImages") || ""
+el.customMessages.value = get("customMessages") || ""
+el.colorInput.value = get("customColor") || "#000000"
+if (get("time-pos")) {
+    el.timePosition.value = get("time-pos")
     el.time.style.top = el.timePosition.value + "px"
 }
-if (localStorage.getItem("message-pos")) {
-    el.messagePosition.value = localStorage.getItem("message-pos")
+if (get("message-pos")) {
+    el.messagePosition.value = get("message-pos")
     el.message.style.top = el.messagePosition.value + "px"
 }
-if (localStorage.getItem("goal-pos")) {
-    el.goalPosition.value = localStorage.getItem("goal-pos")
+if (get("goal-pos")) {
+    el.goalPosition.value = get("goal-pos")
     el.goal.style.bottom = el.goalPosition.value + "px"
 }
-if (localStorage.getItem("shortcut-size")) {
-    el.shortcutSize.value = localStorage.getItem("shortcut-size")
+if (get("shortcut-size")) {
+    el.shortcutSize.value = get("shortcut-size")
     document.documentElement.style.setProperty("--shortcut-size", el.shortcutSize.value + "px")
 }
-if (localStorage.getItem("shortcut-pos")) {
-    el.shortcutPos.value = localStorage.getItem("shortcut-pos")
+if (get("shortcut-pos")) {
+    el.shortcutPos.value = get("shortcut-pos")
     document.documentElement.style.setProperty("--shortcut-pos", el.shortcutPos.value + "px")
 }
-if (localStorage.getItem("enable-shortcuts")) {
-    el.shortcutsToggle.checked = JSON.parse(localStorage.getItem("enable-shortcuts"))
+if (get("enable-shortcuts")) {
+    el.shortcutsToggle.checked = JSON.parse(get("enable-shortcuts"))
     g("shortcut-grid").classList.toggle("hidden", !el.shortcutsToggle.checked)
 }
-if (localStorage.getItem("enable-goal")) {
-    el.goalCheck.checked = JSON.parse(localStorage.getItem("enable-goal"))
+if (get("enable-goal")) {
+    el.goalCheck.checked = JSON.parse(get("enable-goal"))
     g("goal").classList.toggle("hidden", !el.goalCheck.checked)
 }
-if (localStorage.getItem("enable-shadow")) {
-    el.shadowToggle.checked = JSON.parse(localStorage.getItem("enable-shadow"))
+if (get("enable-shadow")) {
+    el.shadowToggle.checked = JSON.parse(get("enable-shadow"))
     updateTextShadow()
 }
-if (localStorage.getItem("darken-shortcuts")) {
-    el.darkenToggle.checked = JSON.parse(localStorage.getItem("darken-shortcuts"))
+if (get("darken-shortcuts")) {
+    el.darkenToggle.checked = JSON.parse(get("darken-shortcuts"))
     updateShortcutBackgrounds()
 }
-if (localStorage.getItem("darken-bg")) {
-    el.darkenBg.value = localStorage.getItem("darken-bg")
+if (get("darken-bg")) {
+    el.darkenBg.value = get("darken-bg")
     updateBackdropFilter()
 }
-if (localStorage.getItem("blur-bg")) {
-    el.blurBg.value = localStorage.getItem("blur-bg")
+if (get("blur-bg")) {
+    el.blurBg.value = get("blur-bg")
     updateBackdropFilter()
 }
-if (localStorage.getItem("grayscale-bg")) {
-    el.grayscaleBg.value = localStorage.getItem("grayscale-bg")
+if (get("grayscale-bg")) {
+    el.grayscaleBg.value = get("grayscale-bg")
     updateBackdropFilter()
 }
-if (localStorage.getItem("vignette-bg")) {
-    el.vignetteToggle.checked = JSON.parse(localStorage.getItem("vignette-bg"))
+if (get("vignette-bg")) {
+    el.vignetteToggle.checked = JSON.parse(get("vignette-bg"))
     updateBackdropFilter()
 }
 
-if (localStorage.getItem("bg-option")) {
-    document.querySelector(`input[value=${localStorage.getItem("bg-option")}]`).checked = true
+if (get("bg-option")) {
+    document.querySelector(`input[value=${get("bg-option")}]`).checked = true
 } else {
     g("bg-option-default").checked = true
 }
-if (localStorage.getItem("mg-option")) {
-    document.querySelector(`input[value=${localStorage.getItem("mg-option")}]`).checked = true
+if (get("mg-option")) {
+    document.querySelector(`input[value=${get("mg-option")}]`).checked = true
 } else {
     g("mg-option-motivational").checked = true
+}
+if (get("font-family")) {
+    el.fontFamily.value = get("font-family")
+    updateFontFamily()
+}
+if (get("secondary-font")) {
+    el.secondaryFont.value = get("secondary-font")
+    updateFontFamily()
 }
 
 document.addEventListener("keydown", (e) => {
@@ -292,10 +345,81 @@ document.addEventListener("keydown", (e) => {
 })
 
 document.getElementById("reset-btn").addEventListener("click", () => {
-    if(confirm('Are you sure?')){localStorage.clear(); window.location.reload()}
+    if(confirm('Are you sure?')){localStorage.removeItem("tabplus"); save={}; window.location.reload()}
 })
 document.getElementById("shortcut-cancel-btn").addEventListener("click", () => {
     g('shortcut-modal').close()
+})
+g("file-backup").addEventListener("click", () => {
+    const downloadUrl = `data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify({tabplus: save}))}`
+    const a = document.createElement("a")
+    a.href = downloadUrl
+    a.download = `tab+ backup ${new Date().toLocaleString("en-US", {dateStyle: "short"}).replaceAll("/", "-")}`
+    a.click()
+    a.remove()
+})
+g("import-backup").addEventListener("click", () => {
+    const input = document.createElement("input")
+    input.type = "file"
+    input.accept = "application/json"
+    input.addEventListener("change", () => {
+        const file = input.files[0]
+        if (file.type == "application/json") {
+            file.text().then((content) => {
+                try {
+                    content = JSON.parse(content)
+                    if (content) {
+                        if ("tabplus" in content && typeof content.tabplus == "object") {
+                            localStorage.setItem("tabplus", JSON.stringify(content.tabplus))
+                            window.location.reload()
+                        } else {
+                            alert("The selected file isn't a valid tab+ backup.")
+                        }
+                    }
+                } catch(error) {
+                    console.error(error)
+                    alert("The selected file contained a syntax error, or there was another problem loading the backup.")
+                }
+            })
+        } else {
+            alert("The selected file isn't saved in the right format, it should be a JSON file.")
+        }
+    })
+    input.click()
+})
+g("sync-backup").addEventListener("click", () => {
+    if (confirm("Sync Backup:\n\nThis feature backs up your data to Chrome sync so you can use it between devices. You have to manually backup and restore on each device you want to sync. Without Chrome sync enabled or an internet connection, this will simply store a local backup.\n\nThis will override any existing backed up data.")) {
+        if (chrome && "storage" in chrome) {
+            chrome.storage.sync.set({backup: save}).then(() => {
+                alert("Backed up successfully!")
+            }).catch((error) => {
+                console.error(error)
+                alert(`Failed to backup data, it's possible that you've reached the sync data limit. Try again in a few minutes or consider backing up to a file using the "Save Backup" option.`)
+            })
+        } else {
+            alert("You need to be running in an extension environment for sync backup to work.")
+        }
+    }
+})
+g("sync-restore").addEventListener("click", () => {
+    if (confirm("Sync Restore:\n\nAny current data will be erased! Consider making a local backup first.")) {
+        if (chrome && "storage" in chrome) {
+            chrome.storage.sync.get().then((data) => {
+                if ("backup" in data && typeof data.backup == "object") {
+                    localStorage.setItem("tabplus", JSON.stringify(data.backup))
+                    save = data.backup
+                    window.location.reload()
+                } else {
+                    alert("No backup data was found, it was corrupted, or the backup was created in an incompatible version of Tab+")
+                }
+            }).catch((error) => {
+                console.error(error)
+                alert(`Failed to restore backup data, it's possible that you've reached the sync data limit. Try again in a few minutes.`)
+            })
+        } else {
+            alert("You need to be running in an extension environment for sync restore to work.")
+        }
+    }
 })
 
 processSubSets()
@@ -303,20 +427,20 @@ processSubSets()
 el.settingsOverlay.addEventListener("click", toggleSettings)
 el.settingsBtn.addEventListener("click", toggleSettings)
 
-if (!localStorage.getItem("first-time")) {
+if (!saved("first-time")) {
     g("welcome").showModal()
     setTimeout(() => {document.querySelector("#welcome > .close-button").disabled = false}, 1) // Prevents the close button from being autofocused
     setTimeout(() => {document.querySelector("#welcome > .settings-button").disabled = false}, 1)
     document.querySelector("#welcome > .close-button").addEventListener("click", () => {
-        localStorage.setItem("first-time", false)
+        set("first-time", false)
         g("welcome").close()
     })
     document.querySelector("#welcome > .settings-button").addEventListener("click", () => {
-        localStorage.setItem("first-time", false)
+        set("first-time", false)
         g("welcome").close()
         toggleSettings()
     })
     g("welcome").addEventListener("cancel", () => {
-        localStorage.setItem("first-time", false)
+        set("first-time", false)
     })
 }

@@ -70,7 +70,7 @@ const colors = [
 
 function refreshBackground() {
     if (getOption("bg-option")?.value == "custom") {
-        let customBgs = localStorage.getItem("customImages")?.trim().split("\n")
+        let customBgs = get("customImages")?.trim().split("\n")
         if (customBgs && customBgs.length > 0) {
             document.documentElement.style.setProperty("--background", `url("${customBgs[Math.floor(Math.random() * customBgs.length)]}")`)
             return

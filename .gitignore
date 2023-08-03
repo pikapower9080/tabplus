@@ -3,3 +3,4 @@ node_modules
 compressBackgrounds.js
 package-lock.json
 package.json
+.DS_Store

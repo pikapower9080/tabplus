@@ -4,6 +4,8 @@
     --shortcut-size: 170px;
     --shortcut-pos: 350px;
     --text-shadow: rgba(0, 0, 0, 0.5) 2px 3px 5px; /* This value must be updated in main.js */
+    --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --secondary-font: sans-serif;
     background-color: var(--background-color);
     background-image: var(--background);
     background-position: center;
@@ -39,7 +41,7 @@ body {
     overflow: hidden;
 }
 
-p, span.shortcut-name, #settings label, #settings legend, a {
+p, span.shortcut-name, #settings label, #settings legend, a, dialog label {
     font-size: 16px;
 }
 a, a:visited {
@@ -58,7 +60,7 @@ dialog h2 {
 
 #time {
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     font-size: 100px;
     font-weight: lighter;
     width: 99vw;
@@ -72,7 +74,7 @@ dialog h2 {
 
 #message {
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     font-weight: lighter;
     font-size: 45px;
     width: 100vw;
@@ -87,7 +89,7 @@ dialog h2 {
 
 #goal {
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     font-weight: lighter;
     font-size: 40px;
     width: 99vw;
@@ -154,6 +156,10 @@ fieldset.subset {
     margin-top: 8px;
     margin-bottom: 8px;
     margin-left: 10px;
+}
+
+fieldset.button-set button {
+    margin-bottom: 5px;
 }
 
 hr {
@@ -233,6 +239,7 @@ em-emoji-picker {
     text-align: center;
     padding-top: 20px;
     text-shadow: var(--text-shadow);
+    font-family: var(--secondary-font);
 }
 .shortcut-name {
     font-weight: bold;
@@ -242,6 +249,7 @@ em-emoji-picker {
     text-align: center;
     vertical-align: bottom;
     text-shadow: var(--text-shadow);
+    font-family: var(--secondary-font);
 }
 
 dialog {
@@ -255,15 +263,22 @@ dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-dialog input {
+input[type="text"], input[type="url"] {
     background-color: #353434;
     color: white;
     border: 1px rgb(129, 129, 129) solid;
 }
 
-dialog input:focus {
+input[type="text"]:focus, input[type="url"]:focus {
     outline: 1px solid white;
     border-radius: 0;
+}
+
+.subtext {
+    color: rgb(202, 202, 202);
+    margin: 4px 8px;
+    display: block;
+    font-size: 13px;
 }
 
 dialog h2 {

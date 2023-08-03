@@ -43,8 +43,8 @@ function refreshMessage() {
         el.message.innerText = messages[messageOption][Math.floor(Math.random() * messages[messageOption].length)]
         return
     }
-    if (messageOption == "customMg" && localStorage.getItem("customMessages")) {
-        let customMessages = localStorage.getItem("customMessages").trim().split("\n")
+    if (messageOption == "customMg" && get("customMessages")) {
+        let customMessages = get("customMessages").trim().split("\n")
         if (customMessages.length > 0) {
             el.message.innerText = customMessages[Math.floor(Math.random() * customMessages.length)]
         } else {

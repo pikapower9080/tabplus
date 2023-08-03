@@ -7,6 +7,7 @@
     <title>New Tab</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="icons/icon-32.png">
+    <link rel="stylesheet" href="" id="google-fonts">
   </head>
   <body>
     <div id="Content">
@@ -82,9 +83,26 @@
             <label>Grayscale</label>
             <input type="range" min="0" max="100" value="0" id="grayscale-bg"><hr style="margin-bottom: 10px;">
             <input type="checkbox" id="vignette-bg"><label for="vignette-bg">Vignette</label>
+            <label class="subtext">Darken the corners of the screen</label>
+          </fieldset>
+          <fieldset>
+            <legend>Text</legend>
+            <label>Font Family:</label>
+            <input type="text" maxlength="200" placeholder="Roboto" id="font-family">
+            <label class="subtext">Enter the exact name of any <a href="https://fonts.google.com/" target="_blank">google font</a> to use for main text like the time and message.</label>
+            <label>Secondary Font:</label>
+            <input type="text" maxlength="200" placeholder="Cabin" id="secondary-font">
+            <label class="subtext">Enter the exact name of any <a href="https://fonts.google.com/" target="_blank">google font</a> to use for shortcuts and other secondary text.</label>
+          </fieldset>
+          <fieldset class="button-set">
+            <legend>Data</legend>
+            <button id="reset-btn">Clear Data</button><br>
+            <button id="file-backup">Save Backup</button>
+            <button id="import-backup">Load Backup</button><br>
+            <button id="sync-backup">Backup to Cloud</button>
+            <button id="sync-restore">Restore from Cloud</button>
           </fieldset>
           <p>Right click a shortcut to customize it.</p>
-          <button id="reset-btn">Reset Data</button><br><br>
         </div>
         <div id="settings-overlay" class="hidden"></div>
         <dialog id="shortcut-modal">
