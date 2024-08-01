@@ -1,13 +1,4 @@
 const messages = {
-    motivational: [
-        "You can do this!",
-        "You've got this!",
-        "You rock!",
-        "You can do it!",
-        "Go you!",
-        "Keep going!",
-        "Do it!"
-    ],
     jokes: [
         "What kind of concert only costs 45 cents? A 50 Cent concert featuring Nickelback.",
         "What did the grape say when it got crushed? Nothing, it just let out a little wine.",
@@ -26,31 +17,38 @@ const messages = {
         "My friend drove his expensive car into a tree and found out how his Mercedes bends.",
         "I was wondering why the ball was getting bigger. Then it hit me.",
         "Waking up this morning was an eye-opening experience.",
-        "Two windmills are standing in a wind farm. One asks, \"What's your favorite kind of music?\" The other says, \"I'm a big metal fan.\"",
+        'Two windmills are standing in a wind farm. One asks, "What\'s your favorite kind of music?" The other says, "I\'m a big metal fan."',
         "I can't believe I got fired from the calendar factory. All I did was take a day off!",
         "I wasn't originally going to get a brain transplant, but then I changed my mind.",
     ],
-    none: [""]
-}
+    none: [""],
+    motivational: [""],
+};
 
 function refreshMessage() {
-    let messageOption = getOption("mg-option")?.value
+    let messageOption = getOption("mg-option")?.value;
     if (!messageOption) {
-        document.getElementById("mg-option-none").checked = true
-        refreshMessage()
+        document.getElementById("mg-option-none").checked = true;
+        refreshMessage();
     }
     if (messages[messageOption]) {
-        el.message.innerText = messages[messageOption][Math.floor(Math.random() * messages[messageOption].length)]
-        return
+        el.message.innerText =
+            messages[messageOption][
+                Math.floor(Math.random() * messages[messageOption].length)
+            ];
+        return;
     }
     if (messageOption == "customMg" && get("customMessages")) {
-        let customMessages = get("customMessages").trim().split("\n")
+        let customMessages = get("customMessages").trim().split("\n");
         if (customMessages.length > 0) {
-            el.message.innerText = customMessages[Math.floor(Math.random() * customMessages.length)]
+            el.message.innerText =
+                customMessages[
+                    Math.floor(Math.random() * customMessages.length)
+                ];
         } else {
-            el.message.innerText = "Add some custom messages!"
+            el.message.innerText = "Add some custom messages!";
         }
     }
 }
 
-refreshMessage()
+refreshMessage();
